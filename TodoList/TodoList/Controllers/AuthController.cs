@@ -22,12 +22,12 @@ namespace TodoList.Controllers
         {
             var userCheck = _authService.Login(user);
 
-            if (userCheck==null)
+            if (!userCheck.Success)
             {
-                return BadRequest();
+                return Ok(userCheck);
             }
 
-            var token=_authService.CreateToken(userCheck);
+            var token=_authService.CreateToken(userCheck.Data);
             return Ok(token);
         }
 
@@ -36,13 +36,10 @@ namespace TodoList.Controllers
         {
             var userCheck = _authService.Register(user);
 
-            if (userCheck == null)
-            {
-                return BadRequest();
-            }
+            
             if (!userCheck.Success)
             {
-                return BadRequest();
+                return Ok(userCheck);
             }
             
             return Ok(userCheck.Data);

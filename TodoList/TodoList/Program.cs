@@ -37,6 +37,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin",
+        builder => builder.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader());
+});
+
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserService, UserManager>();
 builder.Services.AddSingleton<IAuthService, AuthManager>();
@@ -54,10 +62,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 app.UseAuthorization();
 app.MapControllers();
 
+app.UseCors("AllowOrigin");
 app.Run();

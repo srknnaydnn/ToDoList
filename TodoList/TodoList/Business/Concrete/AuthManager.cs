@@ -20,30 +20,44 @@ namespace TodoList.Business.Concrete
         }
 
 
-        public UserForLogin Login(UserForLogin user)
+        public DataResult<UserForLogin> Login(UserForLogin user)
         {
             var userCheck = _userService.GetUser(user.Email);
 
-            if (userCheck == null)
+            if (!userCheck.Success)
             {
 
-                return null;
+                return new DataResult<UserForLogin>(null,"Kullanıcı Bulunamadı",false);
+            }
+            if (userCheck.Data.Password !=user.Password)
+            {
+                return new DataResult<UserForLogin>(null, "Kullanıcı email veya şifre yanlış", false);
             }
             var userDto = new UserForLogin
             {
-                Email = userCheck.Email,
-                Password = userCheck.Password,
+                Email = userCheck.Data.Email,
+                Password = userCheck.Data.Password,
             };
-            return userDto;
+            return new DataResult<UserForLogin>(userDto," ",true);
         }
-        public string CreateToken(UserForLogin user)
+        public DataResult<string> CreateToken(UserForLogin user)
         {
             var token = _jwtToken.CreateAccessToken(user);
-            return token;
+            if (string.IsNullOrEmpty(token))
+            {
+                return new DataResult<string>(null, "Kullanıcı Adı veya Şifre bulunamadı", false);
+            }
+            return new DataResult<string>(token,"Giriş İşlemi Başarılı",true);
         }
 
         public DataResult<UserForRegister> Register(UserForRegister user)
         {
+            var getUser = _userService.GetUser(user.Email);
+
+            if (getUser.Data!=null)
+            {
+                return new DataResult<UserForRegister>(null, "Böyle Bir Kullanıcı Mrvcut", false);
+            }
             var entity = new User
             {
                 Email = user.Email,

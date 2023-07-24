@@ -7,8 +7,8 @@ namespace TodoList.Business.Abstract
     public interface IAuthService
     {
 
-        UserForLogin Login(UserForLogin user);
-        string CreateToken(UserForLogin user);
+        DataResult<UserForLogin> Login(UserForLogin user);
+        DataResult<string> CreateToken(UserForLogin user);
         DataResult<UserForRegister> Register(UserForRegister user);
     }
 }

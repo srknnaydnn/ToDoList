@@ -22,7 +22,9 @@ namespace TodoList.Business.Concrete
                 TodoTitle = todo.TodoTitle,
                 TodoDescription = todo.TodoDescription,
                 Status = todo.Status,
-                UserId = todo.UserId
+                UserId = todo.UserId,
+                CreateDate= DateTime.Now,
+               
             };
              _todoRepository.Add(todoItem);
 
@@ -48,6 +50,7 @@ namespace TodoList.Business.Concrete
                 getTodo.TodoTitle = todo.TodoTitle;
                 getTodo.TodoDescription = todo.TodoDescription;
                 getTodo.Status = todo.Status;
+                getTodo.UpdateDate = todo.UpdateDate;
                 
                 _todoRepository.Update(getTodo);
                 return new SuccessResult("Güncelleme İşlemi Başarılı");

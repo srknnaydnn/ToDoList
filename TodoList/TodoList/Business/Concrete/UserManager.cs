@@ -1,5 +1,6 @@
 ﻿using TodoList.Business.Abstract;
 using TodoList.DataAccess.Abstract;
+using TodoList.Helper.Result;
 using TodoList.Model;
 
 namespace TodoList.Business.Concrete
@@ -16,10 +17,22 @@ namespace TodoList.Business.Concrete
             _userRepository.Add(user);
         }
 
-        public User GetUser(string email)
+        public DataResult<User> GetUser(string email)
         {
             var user = _userRepository.Get(x=>x.Email==email);
-            return user;
+
+            if (user==null)
+            {
+                return new DataResult<User>(null,"Kullanıcı Bulunamadı",false);
+            }
+            return new DataResult<User>(user," ",true);
         }
+
+        public DataResult<List<User>> GetUsers()
+        {
+            var users = _userRepository.GetAll();
+            return new DataResult<List<User>>(users,"Listeleme İşlemi Başarılı",true);
+        }
+
     }
 }
